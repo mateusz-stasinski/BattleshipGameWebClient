@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { Board } from './models/Board';
 import { Field } from './models/Field';
 import { Game } from './models/Game';
+import { ShootRequest } from './models/ShootRequest';
+import { ShootResponse } from './models/ShootResponse';
 import { StartNewGameRequest } from './models/StartNewGameRequest';
 import { GameService } from './services/game.service';
 
@@ -37,7 +39,6 @@ export class AppComponent {
     private newGameFormBuilder: FormBuilder,
     private continueGameFormBuilder: FormBuilder) {
   }
-
 
   InitializeGame(): void {
     const request: StartNewGameRequest = {
@@ -75,6 +76,58 @@ export class AppComponent {
         console.log(err);
       }
     ));
+  }
+
+  Shoot(attackedPlayerId: number, yPosition: number, xPosition: number): void {
+
+    const request: ShootRequest = {
+      gameId: this.game.id,
+      attackedPlayerId: attackedPlayerId,
+      y_Position: yPosition,
+      x_Position: xPosition,
+    }
+    console.log(request);
+
+    let game$ = this.gameService.Shoot(request);
+    this.subscriptions.push(game$.subscribe(
+      (response) => {
+        
+        if (!response.isHit){
+          //Wyświetlić jakiś snackbar, że pudło
+        } else {
+          if (!response.isSunk) {
+            //Wyświetlić jakiś snackbar, że trafiony ale nie zatopiony
+          } else {
+            if (!response.isGameOver) {
+              //Wyświetlić jakiś snackbar, że trafiony i zatopiony
+            } else {
+              //Wyświetlić jakiś snackbar, że Koniec Gry!
+            }
+          }
+        }
+        console.log(response);
+        this.UpdateGame(this.game.id);
+      },
+      (err) => {
+        if(err.status == 409) {
+          // Jakiś snackbar, że nie twoja kolej
+        }
+      }
+    ));
+  }
+
+  UpdateGame(gameid: number): void {
+    let game$ = this.gameService.ContinueGame(gameid);
+    this.subscriptions.push(game$.subscribe(
+      (response) => {
+        this.isGameStarted = true;
+        this.game = response;
+        console.log(response);
+      },
+      (err) => {
+        console.log(err);
+      }
+    ))
   }
 
   StartNewGame(): void {

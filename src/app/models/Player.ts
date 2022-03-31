@@ -6,6 +6,7 @@ export interface Player {
     name: string;
     score: number;
     isWinner: boolean;
+    isYourMove: boolean;
     board: Board;
     ships: Ship[];
 }

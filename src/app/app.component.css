@@ -27,8 +27,13 @@ header {
 .field {
     height: 100px;
     width: 100px;
-    background-color: rgb(92, 195, 255);
+    background-color: rgb(36, 255, 120);
     font-size: 12px;
     border: 1px solid #000000;
     text-align: center;
+}
+
+.field:hover {
+    cursor: pointer;
+    background-color: rgb(244, 255, 85);
 }

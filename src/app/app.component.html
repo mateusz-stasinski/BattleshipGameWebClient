@@ -36,19 +36,25 @@
             <h2>GameId: {{game.id}}</h2>
             <section *ngFor="let player of game.players">
                 <h3>{{player.name}}</h3>
+                <p>{{player.score}}</p>
+                <b *ngIf="player.isWinner"> WINNER! </b>
 
-                <div class="board">
+                <div *ngIf="!game.isEnded" class="board">
                     
                     <div *ngFor="let row of player.board.rows" class="row">
 
-                        <div *ngFor="let field of row.fields" class="field">
-                            <p>position: {{field.x_Position}} , {{field.y_Position}}<br>
+                        <div *ngFor="let field of row.fields" class="field" (click)="Shoot(player.id, field.y_Position, field.x_Position)">
+                            <p *ngIf="field.status != 2">position: {{field.x_Position}} , {{field.y_Position}}<br>
                             status: {{field.status}}<br>
                             shipId: {{field.shipId}}</p>
+
+                            <h1 *ngIf="field.status == 2">T</h1>
                         </div>
                         
                     </div>
                 </div>
+
+                <h2 *ngIf="!game.isEnded">The game is over</h2>
                 
             </section>
         </article>
