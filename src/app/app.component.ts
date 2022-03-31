@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Board } from './models/Board';
-import { Field } from './models/Field';
 import { Game } from './models/Game';
 import { ShootRequest } from './models/ShootRequest';
 import { ShootResponse } from './models/ShootResponse';
 import { StartNewGameRequest } from './models/StartNewGameRequest';
 import { GameService } from './services/game.service';
+import { fade } from './shared/animations';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  animations: [fade]
 })
 export class AppComponent {
   
@@ -33,6 +33,9 @@ export class AppComponent {
 
   subscriptions: Subscription[] = [];
   game!: Game;
+  shootingPlayerName: string = '';
+  shot!: ShootResponse;
+  winnerName: string = '';
 
   constructor(
     private gameService: GameService,
@@ -55,6 +58,8 @@ export class AppComponent {
         this.isGameStarted = true;
         this.game = response;
         console.log(response);
+        this.shootingPlayerName = this.game.players.find(p => p.isMyOpponentMove == false)?.name ?? '';
+        this.winnerName = this.game.players.find(p => p.isWinner == true)?.name ?? '';
       },
       (err) => {
         console.log(err);
@@ -71,6 +76,8 @@ export class AppComponent {
         this.isGameStarted = true;
         this.game = response;
         console.log(response);
+        this.shootingPlayerName = this.game.players.find(p => p.isMyOpponentMove == false)?.name ?? '';
+        this.winnerName = this.game.players.find(p => p.isWinner == true)?.name ?? '';
       },
       (err) => {
         console.log(err);
@@ -91,7 +98,8 @@ export class AppComponent {
     let game$ = this.gameService.Shoot(request);
     this.subscriptions.push(game$.subscribe(
       (response) => {
-        
+        this.shot = response;
+
         if (!response.isHit){
           //Wyświetlić jakiś snackbar, że pudło
         } else {
@@ -123,6 +131,8 @@ export class AppComponent {
         this.isGameStarted = true;
         this.game = response;
         console.log(response);
+        this.shootingPlayerName = this.game.players.find(p => p.isMyOpponentMove == false)?.name ?? '';
+        this.winnerName = this.game.players.find(p => p.isWinner == true)?.name ?? '';
       },
       (err) => {
         console.log(err);

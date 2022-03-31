@@ -6,7 +6,7 @@ export interface Player {
     name: string;
     score: number;
     isWinner: boolean;
-    isYourMove: boolean;
+    isMyOpponentMove: boolean;
     board: Board;
     ships: Ship[];
 }

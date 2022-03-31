@@ -34,29 +34,43 @@
 
         <article *ngIf="isGameStarted">
             <h2>GameId: {{game.id}}</h2>
+
+            <section *ngFor="let player of game.players" class="playerData">
+                <div>
+                    <h3>Player one name: {{player.name}}</h3>
+                    <p>Player one score: {{player.score}}</p>
+                </div>
+            </section>
+
+
             <section *ngFor="let player of game.players">
-                <h3>{{player.name}}</h3>
-                <p>{{player.score}}</p>
-                <b *ngIf="player.isWinner"> WINNER! </b>
 
-                <div *ngIf="!game.isEnded" class="board">
-                    
-                    <div *ngFor="let row of player.board.rows" class="row">
+                <div *ngIf="player.isMyOpponentMove && !game.isEnded">
 
-                        <div *ngFor="let field of row.fields" class="field" (click)="Shoot(player.id, field.y_Position, field.x_Position)">
-                            <p *ngIf="field.status != 2">position: {{field.x_Position}} , {{field.y_Position}}<br>
-                            status: {{field.status}}<br>
-                            shipId: {{field.shipId}}</p>
+                    <h3 @fade>{{shootingPlayerName}} is your move. Shoot to your opponent board.</h3>
+                    <div @fade class="board">
+                        <div *ngFor="let row of player.board.rows" class="row">
 
-                            <h1 *ngIf="field.status == 2">T</h1>
+                            <div *ngFor="let field of row.fields" class="field" (click)="Shoot(player.id, field.y_Position, field.x_Position)">
+                                
+                                <p *ngIf="field.status != 2">{{field.y_Position}} , {{field.x_Position}}<br>
+
+                                <div *ngIf="field.status == 2" class="ship">
+                                    <mat-icon>directions_boat_filled</mat-icon>
+                                </div>
+                            </div>
+                            
                         </div>
-                        
                     </div>
                 </div>
-
-                <h2 *ngIf="!game.isEnded">The game is over</h2>
                 
             </section>
+
+            <section *ngIf="game.isEnded">
+                <h2>The game is over!</h2>
+                <h3>The winner is {{winnerName}}</h3>
+            </section>
+
         </article>
 
 
