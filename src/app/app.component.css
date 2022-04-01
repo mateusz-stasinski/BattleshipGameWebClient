@@ -1,6 +1,7 @@
 header {
-    width: 100vw;
-    padding: 20px 40px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 30px;
     background-color: rgb(194, 194, 194);
     position: sticky;
     top: 0;
@@ -8,8 +9,8 @@ header {
 }
 
 .container {
-    width: 100%;
-    padding: 40px;
+    width: auto;
+    padding: 30px;
 }
 
 .playersData {
@@ -32,7 +33,7 @@ header {
 .row {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 .field {
