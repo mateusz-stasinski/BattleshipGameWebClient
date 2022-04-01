@@ -36,8 +36,8 @@ header {
 }
 
 .field {
-    height: 100px;
-    width: 100px;
+    height: 60px;
+    width: 60px;
     background-color: rgb(36, 255, 120);
     border: 1px solid #000000;
     text-align: center;
@@ -55,8 +55,47 @@ header {
     color: red;
 }
 
+.missedField {
+    background-color: rgb(229, 255, 98);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    width: 60px;
+}
+
 mat-icon {
     font-size: 40px;
     height: 40px;
     width: 40px;
+}
+
+.shipList {
+    padding: 5px 0;
+}
+
+.shipDetails {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+
+.shipName{
+    margin-right: 16px;
+}
+
+.shipDetails > mat-icon {
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+}
+
+.notHit {
+    color: green !important;
+}
+
+.hit {
+    color: red !important;
 }

@@ -21,14 +21,14 @@
             <input formControlName="secondPlayerName" type="text" placeholder="Second Player Name">
             <p>Insert board size</p>
             <input formControlName="xSize" type="number" min="7" max="20"> X <input formControlName="ySize" type="number" min="7" max="20">
-            <button type="submit">Start Game</button>
+            <button type="submit" [disabled]="!newGameForm.valid">Start Game</button>
         </form>
 
         <form *ngIf="!isGameStarted && !isNewGameChosen && isContinuationGameChosen"
         [formGroup]="continueGameForm"
         (ngSubmit)="LoadGame()">
             <p>Insert Game Number</p>
-            <input type="number" formControlName="gameId">
+            <input type="number" formControlName="gameId" min="1">
             <button type="submit">Continue Game</button>
         </form>
 
@@ -47,19 +47,35 @@
 
                 <div *ngIf="player.isMyOpponentMove && !game.isEnded">
 
-                    <h3 @fade>{{shootingPlayerName}} is your move. Shoot to your opponent board.</h3>
-                    <div @fade class="board">
+                    <h3 @fadeLong>{{shootingPlayerName}} is your move. Shoot to your opponent board.</h3>
+                    <div @fadeLong class="board">
                         <div *ngFor="let row of player.board.rows" class="row">
 
                             <div *ngFor="let field of row.fields" class="field" (click)="Shoot(player.id, field.y_Position, field.x_Position)">
                                 
-                                <p *ngIf="field.status != 2">{{field.y_Position}} , {{field.x_Position}}<br>
+                                <p *ngIf="field.status == 0 || field.status == 1">{{field.y_Position}} , {{field.x_Position}}<br>
 
-                                <div *ngIf="field.status == 2" class="ship">
+                                <div @fade *ngIf="field.status == 2" class="ship">
                                     <mat-icon>directions_boat_filled</mat-icon>
+                                </div>
+
+                                <div @fade *ngIf="field.status == 3" class="missedField">
+                                    <mat-icon>clear</mat-icon>
                                 </div>
                             </div>
                             
+                        </div>
+                    </div>
+
+                    <div @fadeLong *ngFor="let ship of player.ships" class="shipList">
+                        <div class="shipDetails">
+                            <div class="shipName">
+                                {{ship.name}}
+                            </div>
+                            <div *ngFor="let field of ship.fields">
+                                <mat-icon *ngIf="field.status != 2" class="notHit">favorite</mat-icon>
+                                <mat-icon *ngIf="field.status == 2" class="hit">clear</mat-icon>
+                            </div>
                         </div>
                     </div>
                 </div>

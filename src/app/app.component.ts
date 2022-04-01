@@ -1,18 +1,20 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
+import { Field } from './models/Field';
 import { Game } from './models/Game';
 import { ShootRequest } from './models/ShootRequest';
 import { ShootResponse } from './models/ShootResponse';
 import { StartNewGameRequest } from './models/StartNewGameRequest';
 import { GameService } from './services/game.service';
-import { fade } from './shared/animations';
+import { fade, fadeLong } from './shared/animations';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  animations: [fade]
+  animations: [fade, fadeLong]
 })
 export class AppComponent {
   
@@ -40,7 +42,8 @@ export class AppComponent {
   constructor(
     private gameService: GameService,
     private newGameFormBuilder: FormBuilder,
-    private continueGameFormBuilder: FormBuilder) {
+    private continueGameFormBuilder: FormBuilder,
+    private snackBar: MatSnackBar) {
   }
 
   InitializeGame(): void {
@@ -63,6 +66,8 @@ export class AppComponent {
       },
       (err) => {
         console.log(err);
+        let message = err.title ?? err.message;
+        this.snackBar.open(message, "Close");
       }
     ));
   }
@@ -80,6 +85,12 @@ export class AppComponent {
         this.winnerName = this.game.players.find(p => p.isWinner == true)?.name ?? '';
       },
       (err) => {
+        if (err.status == 404) {
+          this.snackBar.open('There is no game with the given number ', "Close");
+        } else {
+          let message = err.title ?? err.message;
+          this.snackBar.open(message, "Close");
+        }
         console.log(err);
       }
     ));
@@ -100,26 +111,28 @@ export class AppComponent {
       (response) => {
         this.shot = response;
 
-        if (!response.isHit){
-          //Wyświetlić jakiś snackbar, że pudło
-        } else {
-          if (!response.isSunk) {
-            //Wyświetlić jakiś snackbar, że trafiony ale nie zatopiony
-          } else {
-            if (!response.isGameOver) {
-              //Wyświetlić jakiś snackbar, że trafiony i zatopiony
-            } else {
-              //Wyświetlić jakiś snackbar, że Koniec Gry!
-            }
-          }
+        let updateField: Field = {
+          x_Position: request.x_Position,
+          y_Position: request.y_Position,
+          status: this.shot.status,
+          shipId: this.shot.shipId,
+          boardId: this.shot.boardId
         }
+        let playerIndex = this.game.players.findIndex(p => p.id == attackedPlayerId);
+        this.game.players[playerIndex].board.rows[request.y_Position - 1].fields[request.x_Position -1] = updateField;
         console.log(response);
-        this.UpdateGame(this.game.id);
+        setTimeout(() => {
+          this.UpdateGame(this.game.id);
+        },2000);
       },
       (err) => {
         if(err.status == 409) {
-          // Jakiś snackbar, że nie twoja kolej
+          this.snackBar.open('This is not your turn', 'Close');
+        } else {
+          let message = err.title ?? err.message;
+          this.snackBar.open(message, "Close");
         }
+        console.log(err);
       }
     ));
   }
@@ -135,6 +148,8 @@ export class AppComponent {
         this.winnerName = this.game.players.find(p => p.isWinner == true)?.name ?? '';
       },
       (err) => {
+        let message = err.title ?? err.message;
+        this.snackBar.open(message, "Close");
         console.log(err);
       }
     ))
