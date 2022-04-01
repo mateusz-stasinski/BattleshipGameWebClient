@@ -53,14 +53,12 @@ export class AppComponent {
       xSize: this.getFormElementByName('xSize')?.value,
       ySize: this.getFormElementByName('ySize')?.value
     }
-    console.log(request);
 
     let game$ = this.gameService.StartNewGame(request);
     this.subscriptions.push(game$.subscribe(
       (response) => {
         this.isGameStarted = true;
         this.game = response;
-        console.log(response);
         this.shootingPlayerName = this.game.players.find(p => p.isMyOpponentMove == false)?.name ?? '';
         this.winnerName = this.game.players.find(p => p.isWinner == true)?.name ?? '';
       },
@@ -80,7 +78,6 @@ export class AppComponent {
       (response) => {
         this.isGameStarted = true;
         this.game = response;
-        console.log(response);
         this.shootingPlayerName = this.game.players.find(p => p.isMyOpponentMove == false)?.name ?? '';
         this.winnerName = this.game.players.find(p => p.isWinner == true)?.name ?? '';
       },
@@ -104,7 +101,6 @@ export class AppComponent {
       y_Position: yPosition,
       x_Position: xPosition,
     }
-    console.log(request);
 
     let game$ = this.gameService.Shoot(request);
     this.subscriptions.push(game$.subscribe(
@@ -120,7 +116,6 @@ export class AppComponent {
         }
         let playerIndex = this.game.players.findIndex(p => p.id == attackedPlayerId);
         this.game.players[playerIndex].board.rows[request.y_Position - 1].fields[request.x_Position -1] = updateField;
-        console.log(response);
         setTimeout(() => {
           this.UpdateGame(this.game.id);
         },2000);
@@ -143,7 +138,6 @@ export class AppComponent {
       (response) => {
         this.isGameStarted = true;
         this.game = response;
-        console.log(response);
         this.shootingPlayerName = this.game.players.find(p => p.isMyOpponentMove == false)?.name ?? '';
         this.winnerName = this.game.players.find(p => p.isWinner == true)?.name ?? '';
       },
