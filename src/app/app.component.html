@@ -35,10 +35,10 @@
         <article *ngIf="isGameStarted">
             <h2>GameId: {{game.id}}</h2>
 
-            <section *ngFor="let player of game.players" class="playerData">
+            <section *ngFor="let player of game.players get index" class="playerData">
                 <div>
-                    <h3>Player one name: {{player.name}}</h3>
-                    <p>Player one score: {{player.score}}</p>
+                    <h3>Player name: {{player.name}}</h3>
+                    <p>Player score: {{player.score}}</p>
                 </div>
             </section>
 
